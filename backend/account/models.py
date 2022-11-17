@@ -5,7 +5,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django_resized import ResizedImageField
 from django.core.mail import send_mail
-from django.conf import settings
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 
 
@@ -86,7 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             send_mail(
             'Password Recovery Code',
             message,
-            from_email='test@sandbox2415827782804680ae3b29a892761d76.mailgun.org',
+            from_email= os.environ.get("EMAIL_HOST_USER"),
             recipient_list=[self.email],
             fail_silently=False,
             )
