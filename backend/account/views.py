@@ -34,16 +34,11 @@ class Login(APIView):
 
 class Register(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = User.objects.create_user(**serializer.validated_data)
         try:
-            validate_password(request.data['password'], user=None, password_validators=None)
-            user.set_password(request.data['password'])
-            user.save()
+            serializer = UserSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            User.objects.create_user(**serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except ValidationError as error:
-            return Response({'password': list(error)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -51,7 +46,7 @@ class Register(APIView):
 class Logout(APIView):
     def post(self, request):
         response = Response(status=status.HTTP_200_OK)
-        response.delete_cookie('refresh_token')
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
         return response
 
 

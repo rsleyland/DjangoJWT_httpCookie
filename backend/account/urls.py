@@ -9,7 +9,7 @@ urlpatterns = [
     path('update/', UserUpdate.as_view()),
     path('update-profile/', UserProfileUpdate.as_view()),
     path('reset-password/', ResetPasswordRequest.as_view()),
-    path('reset-password/<str:code>', ResetPasswordVerify.as_view()),
+    path('reset-password/<str:code>/', ResetPasswordVerify.as_view()),
     path('user-profile/', GetMyUserProfile.as_view()),
     path('user/', GetMyUser.as_view()),
     path('deactivate/', DeactivateMyUser.as_view()),

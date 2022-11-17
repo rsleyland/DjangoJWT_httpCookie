@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -5,9 +6,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django_resized import ResizedImageField
 from django.core.mail import send_mail
-from dotenv import load_dotenv
-load_dotenv()
-import os
 
 
 
@@ -79,15 +77,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def send_reset_password_email(self):
         try:
-            message = f"""Hi {self.first_name},\n\n
-            You have requested to reset your password. Please click on the link below to reset your password.
-            \n\n
-            localhost:8000/account/reset-password/{self.password_reset_code}
-            \n\n
-            If you did not request a password reset, please ignore this email.\n\nRegards,\nTeam"""
+
+            
+            html = """\
+                    <html>
+                    <body>
+                        <p>Hi {self.first_name},<br>
+                        You have requested to reset your password.</br> Please click link 
+                        <a href="http://localhost:8000/account/reset-password/{self.password_reset_code}/">here</a>
+                        to reset your password.<br>
+                        </p>
+                    </body>
+                    </html>
+                    """.format(self=self)
+
             send_mail(
             'Password Recovery Code',
-            message,
+            message = html,
             from_email= os.environ.get("EMAIL_HOST_USER"),
             recipient_list=[self.email],
             fail_silently=False,
