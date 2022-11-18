@@ -6,7 +6,7 @@ from account import urls as account_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include(account_urls)),
+    path('api/account/', include(account_urls)),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

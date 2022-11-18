@@ -84,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     <body>
                         <p>Hi {self.first_name},<br>
                         You have requested to reset your password.</br> Please click link 
-                        <a href="http://localhost:8000/account/reset-password/{self.password_reset_code}/">here</a>
+                        <a href="http://localhost:3000/reset-password/{self.password_reset_code}/">here</a>
                         to reset your password.<br>
                         </p>
                     </body>

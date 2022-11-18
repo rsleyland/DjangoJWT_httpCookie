@@ -35,6 +35,7 @@ class Login(APIView):
 class Register(APIView):
     def post(self, request):
         try:
+            print(request.data)
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             User.objects.create_user(**serializer.validated_data)
@@ -172,8 +173,8 @@ class ResetPasswordRequest(APIView):
             user.send_reset_password_email()
             print("EMAIL SENT")
             return Response(status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response({'error': error.messages }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResetPasswordVerify(APIView):
