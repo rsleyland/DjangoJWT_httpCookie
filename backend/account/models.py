@@ -72,7 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         self.email = self.email.lower()
         self.first_name = self.first_name.lower()
-        if self.last_name: self.last_name =self.last_name.lower()
+        if self.last_name: self.last_name = self.last_name.lower()
         super().save(*args, **kwargs)
 
     def __str__(self):

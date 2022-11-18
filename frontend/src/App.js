@@ -4,7 +4,7 @@ import { Dashboard } from './pages/Dashboard.page.js';
 import { Login } from './pages/Auth/Login.page.js';
 import { PasswordResetChange } from './pages/Auth/PasswordResetChange.page.js';
 import { Register } from './pages/Auth/Register.page.js';
-import { PasswordResetRequest } from './pages/Auth/RequestPasswordReset.page.js';
+import { PasswordResetRequest } from './pages/Auth/PasswordResetRequest.page.js';
 import { ConfirmEmail } from './pages/Auth/ConfirmEmail.page.js';
 
 

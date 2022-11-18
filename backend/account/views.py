@@ -39,13 +39,12 @@ class Login(APIView):
 class Register(APIView):
     def post(self, request):
         try:
-            print(request.data)
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             user = User.objects.create_user(**serializer.validated_data)
             user.send_confirm_email()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as error:
+        except ValidationError as error:
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -193,7 +192,6 @@ class ResetPasswordVerify(APIView):
 class ConfirmEmail(APIView):
     def post(self, request, code):
         try:
-            print("code", code)
             user = User.objects.get(email_confirmation_code=code)
             if not user: raise ValidationError("No user found")
             user.email_confirmed = True
