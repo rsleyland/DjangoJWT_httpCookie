@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 
@@ -23,10 +24,10 @@ const ConfirmEmail = () => {
 
 
     return (
-        <div>
-            <h3>Your email address is now confirmed.</h3>
-            <p>You will be redirected to the login page in 3 seconds.</p>
-        </div>
+        <Container fluid className="d-flex bg-dark min-vh-100 justify-content-center align-items-center">
+            <h3 className="text-white">Your email address is now confirmed.</h3><br/>
+            <p className="text-white">You will be redirected to the login page in 3 seconds.</p>
+        </Container>
     );
 }
 

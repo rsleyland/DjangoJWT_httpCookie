@@ -1,27 +1,25 @@
 import { useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../redux/actions/userActions";
+import { Header } from '../components/navigation/Header.js';
 
 
 const Dashboard = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin;
 
-    useEffect(() => {
-        if (!userInfo) navigate('/login');
-    }, [userInfo]);
+    useEffect(() => {if (!userInfo) navigate('/login')}, [userInfo]);
 
     return (
-        <div>
-        <h1>Dashboard</h1>
-        <p>Welcome </p>
-        <Button onClick={() =>dispatch(logout())}>Logout</Button>
-        </div>
+        
+        <Container fluid className="bg-dark min-vh-100">
+            <Header />
+            <h1 className="text-white">Dashboard</h1>
+            <p className="text-white">Welcome </p>
+        </Container>
     );
-    }
+}
 
 export { Dashboard };

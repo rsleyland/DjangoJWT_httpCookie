@@ -33,8 +33,10 @@ const Register = () => {
 
     useEffect(() => {
         if (success) {
-            dispatch({ type: 'USER_REGISTER_CLEAR' });
-            navigate('/login');
+            setTimeout(() => {
+                dispatch({ type: 'USER_REGISTER_CLEAR' });
+                navigate('/login');
+            }, 4000);
         }
     }, [success]);
 
@@ -151,10 +153,11 @@ const Register = () => {
 
     return (
         <Container fluid className="d-flex bg-dark min-vh-100 justify-content-center align-items-center">
-            <LoadingOverlay isLoading={loading} />
+            <LoadingOverlay loading={loading} />
             <Container className="d-flex justify-content-center">
                 <Col xs={12} md={8} lg={6} xl={5} className="bg-light rounded p-4">
                     <h3 className="mb-3">Register</h3>
+                    {success ? <p className="text-success">Please follow the instructions in the email we just sent you in order to verify your email address.</p> : 
                     <Form onSubmit={handleSubmit} noValidate>
                         <Stack direction="horizontal" className="justify-content-between my-2">
                             <InputWithIcon
@@ -215,7 +218,7 @@ const Register = () => {
                         </Stack>
                         {error && Object.entries(error).map(([key, value]) => (
                             <div key={"error-"+key} className="d-flex justify-content-center"><Button variant="danger" className="w-75">{error[key]}</Button></div>))}
-                    </Form>
+                    </Form>}
                 </Col>
             </Container>
         </Container>

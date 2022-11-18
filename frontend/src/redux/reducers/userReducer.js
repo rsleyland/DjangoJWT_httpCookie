@@ -13,6 +13,9 @@ import {
     USER_RESET_PASSWORD_CHANGE_SUCCESS,
     USER_RESET_PASSWORD_CHANGE_FAIL,
     USER_RESET_PASSWORD_CHANGE_REQUEST,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_SUCCESS,
+    USER_PROFILE_FAIL,
 
 } from '../constants/userConstants';
 
@@ -78,6 +81,20 @@ const userResetPasswordChangeReducer = (state = {}, action) => {
     }
 }
 
+const userProfileReducer = (state = {}, action) => {
+    switch (action.type) {
+        case USER_PROFILE_REQUEST:
+            return { loading: true };
+        case USER_PROFILE_SUCCESS:
+            return { loading: false, profileInfo: action.payload };
+        case USER_PROFILE_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
 
 
-export { userLoginReducer, userRegisterReducer, userResetPasswordEmailReducer, userResetPasswordChangeReducer };
+
+
+export { userLoginReducer, userRegisterReducer, userResetPasswordEmailReducer, userResetPasswordChangeReducer, userProfileReducer };

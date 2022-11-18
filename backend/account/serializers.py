@@ -14,7 +14,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["_id", "email", "password", "first_name", "is_active", "is_superuser", "is_staff", "last_name"]
+        fields = ["_id", "email", "password", "first_name", "last_name", "is_active", "is_admin", "is_staff"]
         extra_kwargs = {'password': {'write_only': True}}
 
 # User serializer to convert user model to json
@@ -22,7 +22,7 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
     class Meta:
         model = User
-        fields = ["_id", "email", "password", "first_name", "is_active", "is_superuser", "is_staff", "last_name", "profile"]
+        fields = ["_id", "email", "password", "first_name", "last_name", "is_active", "is_admin", "is_staff", "profile"]
         extra_kwargs = {'password': {'write_only': True}}
     
 

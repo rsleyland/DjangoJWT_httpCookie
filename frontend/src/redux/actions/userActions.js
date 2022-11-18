@@ -13,7 +13,12 @@ import {
     USER_RESET_PASSWORD_CHANGE_REQUEST,
     USER_RESET_PASSWORD_CHANGE_SUCCESS,
     USER_RESET_PASSWORD_CHANGE_FAIL,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_SUCCESS,
+    USER_PROFILE_FAIL,
+    USER_PROFILE_IN_STORAGE,
 } from "../constants/userConstants";
+import { CLEAR_ALL_REDUCERS_DATA } from "../store.js";
 import axios from 'axios';
 
 
@@ -47,9 +52,15 @@ const register = (email, password, first_name, last_name = '',) => async (dispat
 }
 
 const logout = () => async (dispatch) => {
-    localStorage.removeItem(USER_IN_STORAGE);
-    await axios.post('/api/account/logout/');
+    localStorage.clear();
+    try{
+        await axios.post('/api/account/logout/');
+    }
+    catch(error){
+        console.log(error);
+    }
     dispatch({ type: USER_LOGOUT });
+    dispatch({type: CLEAR_ALL_REDUCERS_DATA});
 }
 
 const resetPasswordEmail = (email) => async (dispatch) => {
@@ -80,5 +91,19 @@ const resetPasswordChange = (email, code, password) => async (dispatch) => {
     }
 }
 
+const getUserProfile = () => async (dispatch) => {
+    try {
+        dispatch({ type: USER_PROFILE_REQUEST });
 
-export { login, register, logout, resetPasswordEmail, resetPasswordChange };
+        const { data } = await axios.get('/api/account/profile/');
+
+        dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
+
+        localStorage.setItem(USER_PROFILE_IN_STORAGE, JSON.stringify(data));
+
+    } catch (error) {
+        dispatch({ type: USER_PROFILE_FAIL, payload: error?.response?.data });
+    }
+}
+
+export { login, register, logout, resetPasswordEmail, resetPasswordChange, getUserProfile };

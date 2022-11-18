@@ -1,12 +1,12 @@
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 
-const LoadingOverlay = ({ isLoading }) => {
+const LoadingOverlay = ({ loading }) => {
 
     return (
         <Modal
             className="d-flex justify-content-center align-items-center"
-            show={isLoading}
+            show={loading}
             backdrop="static"
             keyboard={false}
         >

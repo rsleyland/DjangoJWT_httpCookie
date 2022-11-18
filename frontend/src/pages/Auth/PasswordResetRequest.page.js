@@ -44,7 +44,7 @@ const PasswordResetRequest = () => {
 
     return (
         <Container fluid className="d-flex bg-dark min-vh-100 justify-content-center align-items-center">
-            <LoadingOverlay isLoading={loading} />
+            <LoadingOverlay loading={loading} />
             <Container className="d-flex justify-content-center">
                 <Col xs={12} md={8} lg={6} xl={5} className="bg-light rounded p-4">
                     <h3 className="mb-3">Password Reset</h3>
