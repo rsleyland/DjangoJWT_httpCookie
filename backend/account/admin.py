@@ -16,6 +16,7 @@ class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     password_reset_code = User.objects.make_random_password(length=64)
+    email_confirmation_code = User.objects.make_random_password(length=64)
 
     class Meta:
         model = User
@@ -31,6 +32,7 @@ class UserCreationForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.password_reset_code = self.password_reset_code
+        user.email_confirmation_code = self.email_confirmation_code
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
@@ -43,8 +45,8 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_admin','is_active','is_staff','is_superuser')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'password_reset_code')}),
-        ('Permissions', {'fields': ('is_admin', 'is_staff', 'is_superuser', 'is_active')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'password_reset_code', 'email_confirmation_code')}),
+        ('Permissions', {'fields': ('is_admin', 'is_staff', 'is_superuser', 'is_active', 'email_confirmed')}),
     )
     search_fields = ('email',)
     ordering = ('email',)

@@ -16,11 +16,13 @@ class UserManager(BaseUserManager):
         if not password:
             raise ValueError('Users must have a password')
         reset_code = User.objects.make_random_password(length=64)
+        email_confirmation_code = User.objects.make_random_password(length=64)
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
             password_reset_code=reset_code,
+            email_confirmation_code=email_confirmation_code,
             **extra_fields
         )
         try:
@@ -42,6 +44,7 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
+        user.is_active = True
         user.save(using=self._db)
         return user
 
@@ -51,14 +54,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     first_name = models.CharField(max_length=254)
     last_name = models.CharField(max_length=254, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
+    email_confirmed = models.BooleanField(default=False)
     username = None
     password_reset_code = models.CharField(max_length=64, blank=True, null=True)
+    email_confirmation_code = models.CharField(max_length=64, blank=True, null=True)
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name']
@@ -100,6 +105,31 @@ class User(AbstractBaseUser, PermissionsMixin):
             )
         except Exception as e:
             print("Failed to send email:", e)
+    
+    def send_confirm_email(self):
+        try:
+            html = """\
+                    <html>
+                    <body>
+                        <p>Hi {self.first_name},<br>
+                        You have successfully created an account with us. Please click link 
+                        <a href="http://localhost:3000/confirm-email/{self.email_confirmation_code}/">here</a>
+                        to confirm your email.<br>
+                        </p>
+                    </body>
+                    </html>
+                    """.format(self=self)
+
+            send_mail(
+            'Confirm Email',
+            message = html,
+            from_email= os.environ.get("EMAIL_HOST_USER"),
+            recipient_list=[self.email],
+            fail_silently=False,
+            )
+        except Exception as e:
+            print("Failed to send email:", e)
+
 
 
 class Profile(models.Model):

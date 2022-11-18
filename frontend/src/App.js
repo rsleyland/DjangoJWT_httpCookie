@@ -5,6 +5,8 @@ import { Login } from './pages/Auth/Login.page.js';
 import { PasswordResetChange } from './pages/Auth/PasswordResetChange.page.js';
 import { Register } from './pages/Auth/Register.page.js';
 import { PasswordResetRequest } from './pages/Auth/RequestPasswordReset.page.js';
+import { ConfirmEmail } from './pages/Auth/ConfirmEmail.page.js';
+
 
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/reset-password" element={<PasswordResetRequest />} />
             <Route path="/reset-password/:code" element={<PasswordResetChange />} />
+            <Route path="/confirm-email/:code" element={<ConfirmEmail />} />
           </Routes>
         </Router>
       </Container>

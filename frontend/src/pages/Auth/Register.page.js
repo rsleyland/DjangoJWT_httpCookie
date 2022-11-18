@@ -13,7 +13,10 @@ const Register = () => {
     const { success, loading, error } = userRegister;
 
     useEffect(() => {
-        if (success) navigate('/login');
+        if (success) {
+            dispatch({ type: 'USER_REGISTER_CLEAR' });
+            navigate('/login');
+        }
     }, [success]);
 
     useEffect(() => {

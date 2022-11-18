@@ -13,6 +13,10 @@ from django.core.exceptions import ValidationError
 class Login(APIView):
     def post(self, request):
         try:
+            user = User.objects.get(email=request.data['email'])
+            if user.email_confirmed and not user.is_active:
+                user.is_active = True
+                user.save()
             serializer = UserWithJwtTokensSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             refresh_token = serializer.validated_data.pop('refresh')
@@ -38,7 +42,8 @@ class Register(APIView):
             print(request.data)
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            User.objects.create_user(**serializer.validated_data)
+            user = User.objects.create_user(**serializer.validated_data)
+            user.send_confirm_email()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as error:
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
@@ -131,17 +136,6 @@ class DeactivateMyUser(APIView):
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ActivateMyUser(APIView):
-    permission_classes = [IsAuthenticated]
-    def put(self, request):
-        try:
-            user = request.user
-            if not user: return Response("User not logged in.", status=status.HTTP_400_BAD_REQUEST)
-            user.active = True
-            return Response("User activated.", status=status.HTTP_200_OK)
-        except Exception as error:
-            return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class DeleteMyUser(APIView):
     permission_classes = [IsAuthenticated]
@@ -193,5 +187,18 @@ class ResetPasswordVerify(APIView):
             user.password_reset_code = User.objects.make_random_password(length=64)
             user.save()
             return Response("Password has been changed.", status=status.HTTP_200_OK)
+        except ValidationError as error:
+            return Response({'error': error.messages }, status=status.HTTP_400_BAD_REQUEST)
+
+class ConfirmEmail(APIView):
+    def post(self, request, code):
+        try:
+            print("code", code)
+            user = User.objects.get(email_confirmation_code=code)
+            if not user: raise ValidationError("No user found")
+            user.email_confirmed = True
+            user.email_confirmation_code = User.objects.make_random_password(length=64)
+            user.save()
+            return Response("Email has been confirmed.", status=status.HTTP_200_OK)
         except ValidationError as error:
             return Response({'error': error.messages }, status=status.HTTP_400_BAD_REQUEST)
