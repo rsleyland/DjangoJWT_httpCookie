@@ -68,9 +68,8 @@ class UserUpdate(APIView):
             serializer = UserSerializer(user, data={"first_name":first_name, "last_name":last_name, "email":email}, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            if data.get('old_password') and data.get('password') and data.get('confirm_password'):
+            if data.get('old_password') and data.get('password'):
                 if not user.check_password(request.data['old_password']): return Response("Old password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
-                if not request.data['password'] == request.data['confirm_password']: return Response("Passwords do not match.", status=status.HTTP_400_BAD_REQUEST)
                 validate_password(request.data['password'], user=user, password_validators=None)
                 user.set_password(request.data['password'])
                 user.save()

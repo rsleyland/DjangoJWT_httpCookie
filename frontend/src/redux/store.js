@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { userLoginReducer, userRegisterReducer, 
-     userResetPasswordEmailReducer, userResetPasswordChangeReducer, userProfileReducer } from './reducers/userReducer.js';
+     userResetPasswordEmailReducer, userResetPasswordChangeReducer, userProfileReducer, userUpdateReducer, userUpdateProfileReducer } from './reducers/userReducer.js';
 import { USER_IN_STORAGE, USER_PROFILE_IN_STORAGE } from './constants/userConstants.js';
 const CLEAR_ALL_REDUCERS_DATA = 'CLEAR_ALL_REDUCERS_DATA';
 
@@ -11,7 +11,9 @@ const reducers = combineReducers({
     userRegister: userRegisterReducer,
     userResetPasswordEmail: userResetPasswordEmailReducer,
     userResetPasswordChange: userResetPasswordChangeReducer,
-    userProfile: userProfileReducer
+    userProfile: userProfileReducer,
+    userUpdate: userUpdateReducer,
+    userUpdateProfile: userUpdateProfileReducer
 
 });
 

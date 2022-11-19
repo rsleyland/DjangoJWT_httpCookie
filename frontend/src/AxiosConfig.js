@@ -50,8 +50,13 @@ const AxiosResponseInterceptor = (error) => {
 const AxiosRequestInterceptor = () => {
     // Add a request interceptor for axios - adds access token to request header
     axios.interceptors.request.use(function (request) {
-        if (localStorage.getItem(USER_IN_STORAGE)) request.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem(USER_IN_STORAGE)).access}`;
-        request.headers['Content-Type'] = 'application/json';
+        if (request?.url == "/api/account/update-profile/") {
+            request.headers['Content-Type'] = "multipart/form-data";    //uploading image
+        }
+        else request.headers['Content-Type'] = 'application/json';
+        if (localStorage.getItem(USER_IN_STORAGE)) {
+            request.headers['Authorization'] = `Bearer ${JSON.parse(localStorage.getItem(USER_IN_STORAGE)).access}`;
+        } 
         return request;
     }, function (error) {
         console.log("ERROR: ", error);
